@@ -239,7 +239,4 @@ function page_init(string $requested_page): WebPage {
             die("Error: $requested_page not implemented!");
     }
 }
-
-
-
 ?>
