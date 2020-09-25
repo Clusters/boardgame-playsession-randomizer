@@ -74,7 +74,7 @@ function page_init(string $requested_page): WebPage {
             if(!file_exists("./config.json")) {
                 return new SetAdminPage();
             }
-            if($_SESSION["admin"]) {
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"]) {
                 //return new NewSurveyPage();
                 die("Error: Not yet implemented!");
             }

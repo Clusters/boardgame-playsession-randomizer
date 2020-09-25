@@ -10,7 +10,18 @@ class LoginPage extends WebPageSkeleton implements WebPage {
 
     public function print_page_content()
     {
-        $content = file_get_contents("./inc/html/login_form.html");
+        $action = Page::LoginVerification;
+        $content = <<<HTML
+        <form method="POST" action="index.php?page=$action" target="self">
+            <p>
+                <input name="payload" type="hidden" value="Login">
+                <label>Login password:</label><br>
+                <input name="password" type="password" maxlength="40"><br>
+                <br>
+                <input type="submit" value="Submit">
+            </p>
+        </form>
+        HTML;
         echo $this->generate_body_encapsulation($content);
     }
 }
