@@ -31,10 +31,10 @@ class Boardgame {
         // load/create boardgames.json and insert new boardgame
         if(!file_exists("./resources/boardgames.json"))
         {
-            $json = json_encode(array($boardgame_array));
+            $json = json_encode(array($boardgame_array["title"] => $boardgame_array));
         } else {
             $boardgames = json_decode(file_get_contents("./resources/boardgames.json"), true);
-            array_push($boardgames, $boardgame_array);
+            $boardgames[$boardgame_array["title"]] = $boardgame_array;
             $json = json_encode($boardgames);
         }
 

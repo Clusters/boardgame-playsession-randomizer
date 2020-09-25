@@ -37,7 +37,7 @@ class NewEntryPage extends WebPageSkeleton implements WebPage
             <p>
                 <input name="payload" type="hidden" value="$payload">
                 <h1>Add new board game entry</h1>
-                <label for="title">Board game name/title:</label><br>
+                <label for="title">Board game name/title (must be unique)<span style="color:red;">*</span>:</label><br>
                 <input name="title" type="text" maxlength="40" minlength="1" required><br>
                 <br>
                 <label for="player-count">Playable with which player counts?</label><br>
@@ -58,7 +58,7 @@ class NewEntryPage extends WebPageSkeleton implements WebPage
                 <label for="tutorial_url">Enter an URL to a gameplay tutorial (e.g. Youtube Video, blog entry, etc.):</label><br>
                 <input name="tutorial_url" type="url"><br>
                 <br>
-                <label for="bgg_url">Enter the <a href="https://boardgamegeek.com/advsearch/boardgame">boardgamegeek</a> URL of the game:</label><br>
+                <label for="bgg_url">Enter the <a href="https://boardgamegeek.com/advsearch/boardgame">boardgamegeek</a> URL of the game<span style="color:red;">*</span>:</label><br>
                 <input name="bgg_url" type="url"><br>
                 <br>
                 <input type="submit" value="Submit">
