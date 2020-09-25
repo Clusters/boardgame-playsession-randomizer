@@ -9,9 +9,11 @@ abstract class Page
     const StartNewSurvey = "StartNewSurvey";
     const SetAdminUser = "SetAdminUser";
     const DeleteEntry = "DeleteEntry";
+    const ShowSurveys = "ShowSurveys";
     const ShowSurvey = "ShowSurvey";
     const FinishSurvey = "FinishSurvey";
     const ShowSurveyResults = "ShowSurveyResults";
+    const ShowBoardgames = "ShowBoardgames";
     const ShowBoardgameDetails = "ShowBoardgameDetails";
     const Login = "Login";
     const Logout = "Logout";
@@ -36,7 +38,8 @@ abstract class Lists
         Page::NewEntry => Page::NewEntry, Page::StartNewSurvey => Page::StartNewSurvey, Page::SetAdminUser => Page::SetAdminUser, Page::DeleteEntry => Page::DeleteEntry, 
         Page::ShowSurvey => Page::ShowSurvey, Page::FinishSurvey => Page::FinishSurvey, Page::ShowSurveyResults => Page::ShowSurveyResults, 
         Page::ShowBoardgameDetails => Page::ShowBoardgameDetails, Page::Login => Page::Login, Page::NotAuthenticated => Page::NotAuthenticated,
-        Page::LoginVerification => Page::LoginVerification, Page::Logout => Page::Logout, Page::AdminHome => Page::AdminHome
+        Page::LoginVerification => Page::LoginVerification, Page::Logout => Page::Logout, Page::AdminHome => Page::AdminHome,
+        Page::ShowBoardgames => Page::ShowBoardgames, Page::ShowSurveys => Page::ShowSurveys
     );
 
     const AllPayloadTypes = array(

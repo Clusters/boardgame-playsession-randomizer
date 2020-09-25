@@ -12,6 +12,7 @@ require_once("./inc/UnauthenticatedPage.php");
 require_once("./inc/LoginPage.php");
 require_once("./inc/LoginValidationPage.php");
 require_once("./inc/NewEntryPage.php");
+require_once("./inc/AdminHomePage.php");
 
 function digest_request(string $received_payload) {
 
@@ -175,6 +176,13 @@ function page_init(string $requested_page): WebPage {
             {
                 return new NewEntryPage();
             }
+            return new UnauthenticatedPage();
+        case Page::AdminHome:
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"])
+            {
+                return new AdminHomePage();
+            }
+            return new UnauthenticatedPage();
         default:
             die("Error: $requested_page not implemented!");
     }

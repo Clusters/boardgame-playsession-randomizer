@@ -39,6 +39,10 @@ class Boardgame {
         }
 
         // save new boardgame
+        if(!is_dir("./resources")){ //Check if the directory already exists.
+            //Directory does not exist, so lets create it.
+            mkdir("./resources", 0755);
+        }
         $result = file_put_contents("./resources/boardgames.json", $json);
         if(!$result) {
             die("Error: New board game entry could not be saved!");
