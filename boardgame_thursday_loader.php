@@ -7,12 +7,14 @@ if(!$session_started) {
 
 require_once("./libs/Collection.php");
 require_once("./libs/Boardgame.php");
+require_once("./libs/Survey.php");
 require_once("./inc/SetAdminPage.php");
 require_once("./inc/UnauthenticatedPage.php");
 require_once("./inc/LoginPage.php");
 require_once("./inc/LoginValidationPage.php");
 require_once("./inc/NewEntryPage.php");
 require_once("./inc/AdminHomePage.php");
+require_once("./inc/StartSurveyPage.php");
 
 function digest_request(string $received_payload) {
 
@@ -143,6 +145,51 @@ function digest_request(string $received_payload) {
 
             break;
 
+        case Payload::NewSurvey:
+            // check if request is valid
+            if(!isset($_SESSION["admin"]) || !$_SESSION["admin"]) 
+            {
+                break;
+            }
+
+            // read data
+            if(!isset($_POST["games_amount"]))
+            {
+                die("Error: Missing games amount!");
+            }
+            $games_amount = (int)htmlspecialchars($_POST["games_amount"]);
+
+            $until = time() + (24*5); // default 5 days
+            if(isset($_POST["run_until_date"]) && $_POST["run_until_date"] != "" && isset($_POST["user_timezone"]) && $_POST["user_timezone"] != "")
+            {
+                //validate timezone
+                $user_tz = htmlspecialchars($_POST["user_timezone"]);
+                if(preg_match("#[+-]\d\d:\d\d#", $user_tz)!=1)
+                {
+                    die("Error: Invalid time zone format received!");
+                }
+                
+                $until_date = htmlspecialchars($_POST["run_until_date"]);
+
+                if(isset($_POST["run_until_time"]) && $_POST["run_until_time"] != "")
+                {
+                    $until_time = htmlspecialchars($_POST["run_until_time"]);
+                } else {
+                    $until_time = "00:00";
+                }
+
+                $until = strtotime("{$until_date}T{$until_time}:00.00{$user_tz}");
+                if(!$until)
+                {
+                    die("Error: Invalid Date or Time format received!");
+                }
+            }
+
+            $survey = new Survey();
+            $survey->start_survey($games_amount, $until);
+
+            break;
+
         default:
             die("Error: Not yet implemented!");
     }
@@ -156,8 +203,7 @@ function page_init(string $requested_page): WebPage {
                 return new SetAdminPage();
             }
             if(isset($_SESSION["admin"]) && $_SESSION["admin"]) {
-                //return new NewSurveyPage();
-                die("Error: Not yet implemented!");
+                return new AdminHomePage();
             }
             return new LoginPage();
         case Page::LoginVerification:
@@ -181,6 +227,12 @@ function page_init(string $requested_page): WebPage {
             if(isset($_SESSION["admin"]) && $_SESSION["admin"])
             {
                 return new AdminHomePage();
+            }
+            return new UnauthenticatedPage();
+        case Page::StartNewSurvey:
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"])
+            {
+                return new StartSurveyPage();
             }
             return new UnauthenticatedPage();
         default:

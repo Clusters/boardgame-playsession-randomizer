@@ -13,7 +13,7 @@ class LoginPage extends WebPageSkeleton implements WebPage {
         $payload = Payload::Login;
         $action = Page::LoginVerification;
         $content = <<<HTML
-        <form method="POST" action="index.php?page=$action" target="self">
+        <form method="POST" action="index.php?page=$action" target="_self">
             <p>
                 <input name="payload" type="hidden" value="$payload">
                 <label for="password">Login password:</label><br>

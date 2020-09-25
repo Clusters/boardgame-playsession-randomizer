@@ -33,7 +33,7 @@ class NewEntryPage extends WebPageSkeleton implements WebPage
         $payload = Payload::NewEntry;
         $action = Page::NewEntry;
         $content = <<<HTML
-        <form method="POST" action="index.php?page=$action" target="self">
+        <form method="POST" action="index.php?page=$action" target="_self">
             <p>
                 <input name="payload" type="hidden" value="$payload">
                 <h1>Add new board game entry</h1>

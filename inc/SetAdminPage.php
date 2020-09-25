@@ -13,7 +13,7 @@ class SetAdminPage extends WebPageSkeleton implements WebPage {
         $action = Page::Login;
         $payload = Payload::NewAdminPassword;
         $content = <<<HTML
-        <form method="POST" action="index.php?page=$action" target="self">
+        <form method="POST" action="index.php?page=$action" target="_self">
             <p>
                 <input name="payload" type="hidden" value="$payload">
                 <label for="new_password">New administrator password:</label><br>
