@@ -2,28 +2,30 @@
 
 require_once("./boardgame_thursday_loader.php");
 
+?>
+<html>
+<?php
+
 if(isset($_POST["payload"])) {
-    if(!array_key_exists($_POST["payload"], $all_payload_types)) {
+    if(!array_key_exists($_POST["payload"], Lists::AllPayloadTypes)) {
         die("Error: The requested payload is invalid!");
     }
-    $received_payload = $all_payload_types[$_POST["payload"]];
+    $received_payload = Lists::AllPayloadTypes[$_POST["payload"]];
 
     digest_request($received_payload);
 }
 
 if(isset($_GET["page"])) {
-    if(!array_key_exists($_GET["page"], $all_pages)) {
+    if(!array_key_exists($_GET["page"], Lists::AllPages)) {
         die("Error: The requested page is not valid!");
     }
-    $requested_page = $all_pages[$_GET["page"]];
+    $requested_page = Lists::AllPages[$_GET["page"]];
 } else {
     $requested_page = Page::Login;
 }
 
 $page = page_init($requested_page);
 
-?>
-<html>
-    <?php $page->print_page_header() ?>
-    <?php $page->print_page_content() ?>
+$page->print_page_header(); 
+$page->print_page_content(); ?>
 </html>

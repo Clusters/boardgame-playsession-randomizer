@@ -17,26 +17,34 @@ abstract class Page
     const Logout = "Logout";
     const LoginVerification = "LoginVerification";
     const NotAuthenticated = "NotAuthenticated";
+    const AdminHome = "AdminHome";
 }
-
-/**
- * array which contains all available pages
- */
-$all_pages = array(
-    Page::NewEntry => Page::NewEntry, Page::StartNewSurvey => Page::StartNewSurvey, Page::SetAdminUser => Page::SetAdminUser, Page::DeleteEntry => Page::DeleteEntry, 
-    Page::ShowSurvey => Page::ShowSurvey, Page::FinishSurvey => Page::FinishSurvey, Page::ShowSurveyResults => Page::ShowSurveyResults, 
-    Page::ShowBoardgameDetails => Page::ShowBoardgameDetails, Page::Login => Page::Login, Page::NotAuthenticated => Page::NotAuthenticated,
-    Page::LoginVerification => Page::LoginVerification, Page::Logout => Page::Logout
-);
 
 abstract class Payload 
 {
     const NewAdminPassword = "NewAdminPassword";
     const Login = "Login";
+    const NewEntry = "NewEntry";
 }
 
-$all_payload_types = array(
-    Payload::NewAdminPassword => Payload::NewAdminPassword, Payload::Login => Payload::Login
-)
+abstract class Lists
+{
+    /**
+     * array which contains all available pages
+     */
+    const AllPages = array(
+        Page::NewEntry => Page::NewEntry, Page::StartNewSurvey => Page::StartNewSurvey, Page::SetAdminUser => Page::SetAdminUser, Page::DeleteEntry => Page::DeleteEntry, 
+        Page::ShowSurvey => Page::ShowSurvey, Page::FinishSurvey => Page::FinishSurvey, Page::ShowSurveyResults => Page::ShowSurveyResults, 
+        Page::ShowBoardgameDetails => Page::ShowBoardgameDetails, Page::Login => Page::Login, Page::NotAuthenticated => Page::NotAuthenticated,
+        Page::LoginVerification => Page::LoginVerification, Page::Logout => Page::Logout, Page::AdminHome => Page::AdminHome
+    );
 
+    const AllPayloadTypes = array(
+        Payload::NewAdminPassword => Payload::NewAdminPassword, Payload::Login => Payload::Login, Payload::NewEntry => Payload::NewEntry
+    );
+
+    const AllTags = array(
+        "card game", "RPG"
+    );
+}
 ?>

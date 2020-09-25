@@ -14,9 +14,11 @@ class LoginValidationPage extends WebPageSkeleton implements WebPage {
     {
         if($this->authenticated)
         {
-            echo $this->generate_header("Login Validation", "index.php?page=StartNewSurvey");
+            $action = Page::AdminHome;
+            echo $this->generate_header("Login Validation", "index.php?page=$action");
         } else {
-            echo $this->generate_header("Login Validation", "index.php?page=Login");
+            $action = Page::Login;
+            echo $this->generate_header("Login Validation", "index.php?page=$action");
         }
         
     }
@@ -25,12 +27,14 @@ class LoginValidationPage extends WebPageSkeleton implements WebPage {
     {
         if($this->authenticated) 
         {
+            $action = Page::AdminHome;
             $content = "
-            <p>If automated forwarding does not work -> <a href=\"index.php?page=StartNewSurvey\">Click here</a></p>
+            <p>If automated forwarding does not work -> <a href=\"index.php?page=$action\">Click here</a></p>
             ";
         } else {
+            $action = Page::Login;
             $content = "
-            <p>If automated forwarding does not work -> <a href=\"index.php?page=Login\">Click here</a></p>
+            <p>If automated forwarding does not work -> <a href=\"index.php?page=$action\">Click here</a></p>
             ";
         }
         echo $this->generate_body_encapsulation($content);
