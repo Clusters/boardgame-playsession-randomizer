@@ -48,7 +48,7 @@ function digest_request(string $received_payload) {
             } else {
                 echo <<<SUCCESS
                     <p class="success">Password has been changed</p>
-                SUCCESS;
+SUCCESS;
             }
 
             // log user out

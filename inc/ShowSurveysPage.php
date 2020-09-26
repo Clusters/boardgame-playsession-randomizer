@@ -38,14 +38,14 @@ class ShowSurveysPage extends WebPageSkeleton implements WebPage
                     <a name="$survey_id" href="./index.php?page=$results_page&survey_id=$survey_id">Show results</a>&nbsp;|&nbsp;
                     $voting_link
                 </p>
-            HYPERLINK;
+HYPERLINK;
         }
 
         $content = <<<HTML
         <p>
             $link_list
         </p>
-        HTML;
+HTML;
         echo $this->generate_body_encapsulation($content);
     }
 }

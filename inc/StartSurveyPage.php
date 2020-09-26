@@ -20,7 +20,7 @@ class StartSurveyPage extends WebPageSkeleton implements WebPage
         {
             $games_amount_options .= <<<OPTION
                 <option value="$i">$i</option>
-            OPTION;
+OPTION;
         }
         
         $action = Page::ShowSurveys;
@@ -44,7 +44,7 @@ class StartSurveyPage extends WebPageSkeleton implements WebPage
                 <input type="submit" value="Submit">
             </p>
         </form>
-        HTML;
+HTML;
         echo $this->generate_body_encapsulation($content);
     }
 }

@@ -22,7 +22,7 @@ class SetAdminPage extends WebPageSkeleton implements WebPage {
                 <input type="submit" value="Submit">
             </p>
         </form>
-        HTML;
+HTML;
         echo $this->generate_body_encapsulation($content);
     }
 }
