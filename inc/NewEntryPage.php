@@ -16,7 +16,7 @@ class NewEntryPage extends WebPageSkeleton implements WebPage
         {
             $playercount_options .= <<<OPTION
                 <option value="$i">$i</option>
-            OPTION;
+OPTION;
         }
         $playercount_options_size = 14;
 
@@ -26,7 +26,7 @@ class NewEntryPage extends WebPageSkeleton implements WebPage
             $tag = Lists::AllTags[$i];
             $tag_options .= <<<OPTION
                 <option value="$tag">$tag</option>
-            OPTION;
+OPTION;
         }
         $tag_options_count = sizeof(Lists::AllTags);
 
@@ -64,7 +64,7 @@ class NewEntryPage extends WebPageSkeleton implements WebPage
                 <input type="submit" value="Submit">
             </p>
         </form>
-        HTML;
+HTML;
         echo $this->generate_body_encapsulation($content);
     }
 }

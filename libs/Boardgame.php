@@ -63,7 +63,7 @@ class Boardgame {
         } else {
             echo <<<SUCCESS
                 <p class="success">New board game created</p>
-            SUCCESS;
+SUCCESS;
         }
     }
 }

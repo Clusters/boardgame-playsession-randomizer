@@ -21,7 +21,7 @@ abstract class WebPageSkeleton
             $redirection
             <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
         </head>
-        HTML;
+HTML;
     }
 
     protected function generate_body_encapsulation(string $content): string

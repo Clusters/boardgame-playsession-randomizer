@@ -85,7 +85,7 @@ class Survey
 
         echo <<<SUCCESS
             <p class="success">Survey $this->survey_id started</p>
-        SUCCESS;
+SUCCESS;
 
         return $this->survey_id;
     }
@@ -113,7 +113,7 @@ class Survey
 
         echo <<<SUCCESS
             <p class="success">Vote was registered successfully</p>
-        SUCCESS;
+SUCCESS;
     }
 
     private function fetch_random_games(int $amount): array

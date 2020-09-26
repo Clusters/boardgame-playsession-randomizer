@@ -18,6 +18,7 @@ require_once("./inc/AdminHomePage.php");
 require_once("./inc/StartSurveyPage.php");
 require_once("./inc/ShowSurveysPage.php");
 require_once("./inc/ShowSurveyPage.php");
+require_once("./inc/ShowBoardgamePage.php");
 
 function digest_request(string $received_payload) {
 
@@ -48,7 +49,7 @@ function digest_request(string $received_payload) {
             } else {
                 echo <<<SUCCESS
                     <p class="success">Password has been changed</p>
-                SUCCESS;
+SUCCESS;
             }
 
             // log user out
@@ -276,6 +277,11 @@ function page_init(string $requested_page): WebPage {
             if(isset($_GET["survey_id"])) 
             {
                 return new ShowSurveyPage(htmlspecialchars($_GET["survey_id"]));
+            }
+            return new LoginPage();
+        case Page::ShowBoardgameDetails:
+            if(isset($_GET["boardgame_id"])){
+                return new ShowBoardgamePage(htmlspecialchars($_GET["boardgame_id"]));
             }
             return new LoginPage();
         case Page::StartNewSurvey:

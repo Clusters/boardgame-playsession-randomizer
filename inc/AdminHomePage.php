@@ -21,14 +21,14 @@ class AdminHomePage extends WebPageSkeleton implements WebPage
         {
             $link_list .= <<<HYPERLINK
                 <a href="./index.php?page=$page">$text</a><br>
-            HYPERLINK;
+HYPERLINK;
         }
 
         $content = <<<HTML
         <p>
             $link_list
         </p>
-        HTML;
+HTML;
         echo $this->generate_body_encapsulation($content);
     }
 }

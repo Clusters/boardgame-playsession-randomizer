@@ -1,6 +1,6 @@
 <?php
 
-require_once("./boardgame_thursday_loader.php");
+require_once("./boardgame_survey_loader.php");
 
 ?>
 <html>
