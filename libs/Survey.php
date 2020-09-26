@@ -5,7 +5,7 @@ class Survey
     private $last_update = 0;
     public $active = null;
     public $survey_id = 0;
-    private $boardgames_and_votes = array();
+    public $boardgames_and_votes = array();
     private $started_on = null;
     private $runs_until = null;
 
@@ -78,7 +78,7 @@ class Survey
 
         $games = $this->fetch_random_games($games_amount);
 
-        $survey_json = $this->generate_survey_json($games, $until);
+        $survey_json = $this->generate_new_survey_json($games, $until);
 
         $this->survey_id = $this->add_new_survey_to_json_file($survey_json);
         $this->active = true;
@@ -88,6 +88,32 @@ class Survey
         SUCCESS;
 
         return $this->survey_id;
+    }
+
+    /**
+     * Parses, adds and updates the votes of this survey with given votes
+     * 
+     * @param votes:
+     * Expected is an array containing the bgg_ids of the games were votes should be applied.
+     */
+    public function digest_votes(array $votes) 
+    {
+        if($this->boardgames_and_votes == array())
+        {
+            die("Error: This survey has no games to vote on!");
+        }
+
+        foreach($votes as $bgg_id)
+        {
+            $this->boardgames_and_votes[$bgg_id]++;
+        }
+
+        $survey_json = $this->generate_updated_survey_json();
+        $this->write_survey_to_json_file($survey_json);
+
+        echo <<<SUCCESS
+            <p class="success">Vote was registered successfully</p>
+        SUCCESS;
     }
 
     private function fetch_random_games(int $amount): array
@@ -135,11 +161,11 @@ class Survey
         return $chosen_boardgames;
     }
 
-    private function generate_survey_json(array $games, int $until): array
+    private function generate_new_survey_json(array $games, int $until): array
     {
         $game_items = array();
         foreach($games as $game) {
-            $game_items[$game->bgg_id] = 0; // the int represents the amount of votes the game got (0 on generation)
+            $game_items[$game->bgg_id] = 0; // the int represents the amount of votes the game got (0 for new surveys)
         }
 
         $survey_json = array(
@@ -149,9 +175,56 @@ class Survey
         return $survey_json;
     }
 
+    private function generate_updated_survey_json(): array
+    {
+        if(is_null($this->started_on) || is_null($this->runs_until))
+        {
+            die("Error: Incomplete or unloaded survey cannot be updated!");
+        }
+
+        return array(
+            "games" => $this->boardgames_and_votes, "started" => $this->started_on, "run_until" => $this->runs_until,
+            "version" => $this->version
+        );
+    }
+
     private function add_new_survey_to_json_file(array $survey_json): int
     {
         $new_survey_id = $this->get_last_survey_id()+1;
+        $this->write_survey_to_json_file($survey_json, $new_survey_id);
+
+        return $new_survey_id;
+    }
+
+    /**
+     * Writes a survey in json-like format to the survey.json file. Can used to update existing surveys, but also
+     * to write new surveys.
+     * 
+     * @param survey_json:
+     * json-like array in the following format:
+     * array (
+     *      "games" => array (
+     *          "<bgg_id>" => <number_of_votes>,
+     *          "151347" => 0,
+     *          "180263" => 0,
+     *          "181687" => 0
+     *      ),
+     *      "started" => 1601062011,
+     *      "run_until" => 1601493240,
+     *      "version" => 1
+     * )
+     * @param new_survey_id:
+     * Optional: Only necessary if the last_survey_id should be updated. Will also 
+     * be used over $this->survey_id
+     */
+    private function write_survey_to_json_file(array $survey_json, int $new_survey_id = null)
+    {
+        $survey_id = $this->survey_id;
+        if(!is_null($new_survey_id))
+        {
+            $survey_id = $new_survey_id;
+        }
+
         if(!is_dir("./data") || !file_exists("./data/surveys.json"))
         {
             if(!is_dir("./data"))
@@ -160,21 +233,22 @@ class Survey
             }
 
             $surveys_json = array(
-                "last_survey_id" => $new_survey_id,
-                "surveys" => array($new_survey_id => $survey_json)
+                "last_survey_id" => $survey_id,
+                "surveys" => array($survey_id => $survey_json)
             );
         } else {
             $surveys_json = json_decode(file_get_contents("./data/surveys.json"), true);
-            $surveys_json["last_survey_id"] = $new_survey_id;
-            $surveys_json["surveys"][$new_survey_id] = $survey_json;
+            $surveys_json["surveys"][$survey_id] = $survey_json;
+            if(!is_null($new_survey_id))
+            {
+                $surveys_json["last_survey_id"] = $new_survey_id;
+            }
         }
 
         $result = file_put_contents("./data/surveys.json", json_encode($surveys_json));
         if(!$result) {
-            die("Error: Survey could not be started!");
+            die("Error: Survey could not written to json file!");
         }
-
-        return $new_survey_id;
     }
 
     /**
@@ -194,16 +268,7 @@ class Survey
      *  }
      */
     private function digest_json(array $survey_json)
-    {
-        // not possible due to array type restrictions: array keys must be primitive
-        /* $boardgames = fetch_all_boardgames();
-        $games_and_votes = array();
-        foreach($survey_json["games"] as $bgg_id => $amount_of_votes)
-        {
-            $games_and_votes[$boardgames[$bgg_id]] = $amount_of_votes;
-        }
-        $this->boardgames_and_votes = $games_and_votes; */
-        
+    {        
         $this->boardgames_and_votes = $survey_json["games"];
 
         $this->started_on = $survey_json["started"];

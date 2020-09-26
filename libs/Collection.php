@@ -28,6 +28,7 @@ abstract class Payload
     const Login = "Login";
     const NewEntry = "NewEntry";
     const NewSurvey = "NewSurvey";
+    const NewVote = "NewVote";
 }
 
 abstract class Lists
@@ -45,7 +46,7 @@ abstract class Lists
 
     const AllPayloadTypes = array(
         Payload::NewAdminPassword => Payload::NewAdminPassword, Payload::Login => Payload::Login, Payload::NewEntry => Payload::NewEntry,
-        Payload::NewSurvey => Payload::NewSurvey
+        Payload::NewSurvey => Payload::NewSurvey, Payload::NewVote => Payload::NewVote
     );
 
     const AllTags = array(

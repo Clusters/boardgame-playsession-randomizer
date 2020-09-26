@@ -19,6 +19,7 @@ abstract class WebPageSkeleton
             </title>
             <link rel="stylesheet" href="./resources/css/site.css">
             $redirection
+            <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
         </head>
         HTML;
     }
