@@ -24,7 +24,6 @@ class AdminHomePage extends WebPageSkeleton implements WebPage
             HYPERLINK;
         }
 
-
         $content = <<<HTML
         <p>
             $link_list

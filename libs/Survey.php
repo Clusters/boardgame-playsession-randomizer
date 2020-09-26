@@ -47,12 +47,7 @@ class Survey
     private function fetch_random_games(int $amount): array
     {
         // fetch all board games
-        if(!is_dir("./resources") || !file_exists("./resources/boardgames.json"))
-        {
-            die("Error: Tried to start a survey with $amount of games, when there are no board games added yet!");
-        }
-
-        $boardgames = json_decode(file_get_contents("./resources/boardgames.json"), true);
+        $boardgames = fetch_all_boardgames();
         
         $boardgames_amount = sizeof($boardgames);
         if($boardgames_amount<$amount)
@@ -64,7 +59,7 @@ class Survey
         // choose randomly <amount> of board games
         for($i=0;$i<$amount;$i++)
         {
-            // try to find a fitting
+            // try to find a fitting board game
             while(true)
             {
                 if(sizeof($boardgames)<1)
@@ -75,11 +70,11 @@ class Survey
                 $random_bg_index_offset = random_int(0,sizeof($boardgames)-1);
                 $random_bg_key = array_keys($boardgames)[$random_bg_index_offset];
 
-                $candidate = new Boardgame(
-                    $boardgames[$random_bg_key]["title"], $boardgames[$random_bg_key]["player_count"], $boardgames[$random_bg_key]["multisession"], $boardgames[$random_bg_key]["tags"],
-                    $boardgames[$random_bg_key]["preview_url"], $boardgames[$random_bg_key]["tutorial_url"], $boardgames[$random_bg_key]["bgg_id"], $boardgames[$random_bg_key]["created"],
-                    $boardgames[$random_bg_key]["last_survey_id"], $boardgames[$random_bg_key]["version"]
-                );
+                $candidate = $boardgames[$random_bg_key];
+                if(!($candidate instanceof Boardgame))
+                {
+                    die("Error: Wrong data type received from item of fetch_all_boardgames() return.");
+                }
 
                 unset($boardgames[$random_bg_key]); // delete used game from pool of games
 
