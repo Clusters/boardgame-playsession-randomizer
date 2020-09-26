@@ -43,21 +43,21 @@ class Boardgame {
         );
 
         // load/create boardgames.json and insert new boardgame
-        if(!file_exists("./resources/boardgames.json"))
+        if(!file_exists("./data/boardgames.json"))
         {
-            $json = json_encode(array($boardgame_array["title"] => $boardgame_array));
+            $json = json_encode(array($boardgame_array["bgg_id"] => $boardgame_array));
         } else {
-            $boardgames = json_decode(file_get_contents("./resources/boardgames.json"), true);
-            $boardgames[$boardgame_array["title"]] = $boardgame_array;
+            $boardgames = json_decode(file_get_contents("./data/boardgames.json"), true);
+            $boardgames[$boardgame_array["bgg_id"]] = $boardgame_array;
             $json = json_encode($boardgames);
         }
 
         // save new boardgame
-        if(!is_dir("./resources")){ //Check if the directory already exists.
+        if(!is_dir("./data")){ //Check if the directory already exists.
             //Directory does not exist, so lets create it.
-            mkdir("./resources", 0755);
+            mkdir("./data", 0755);
         }
-        $result = file_put_contents("./resources/boardgames.json", $json);
+        $result = file_put_contents("./data/boardgames.json", $json);
         if(!$result) {
             die("Error: New board game entry could not be saved!");
         } else {

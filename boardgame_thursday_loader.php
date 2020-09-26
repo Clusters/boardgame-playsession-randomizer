@@ -6,6 +6,7 @@ if(!$session_started) {
 }
 
 require_once("./libs/Collection.php");
+require_once("./libs/Helpers.php");
 require_once("./libs/Boardgame.php");
 require_once("./libs/Survey.php");
 require_once("./inc/SetAdminPage.php");
@@ -15,6 +16,8 @@ require_once("./inc/LoginValidationPage.php");
 require_once("./inc/NewEntryPage.php");
 require_once("./inc/AdminHomePage.php");
 require_once("./inc/StartSurveyPage.php");
+require_once("./inc/ShowSurveysPage.php");
+require_once("./inc/ShowSurveyPage.php");
 
 function digest_request(string $received_payload) {
 
@@ -189,7 +192,41 @@ function digest_request(string $received_payload) {
             $survey->start_survey($games_amount, $until);
 
             break;
+        case Payload::NewVote:
+            // check if request is valid
+            // todo insert some sort of check for multi-voting attempts
 
+            if(!isset($_POST["survey_id"]))
+            {
+                die("Error: No survey_id found. Can not process votes for unknown survey.");
+            }
+
+            // load survey
+            $survey_id = htmlspecialchars($_POST["survey_id"]);
+            $surveys = fetch_all_surveys();
+            if(!key_exists($survey_id, $surveys)) 
+            {
+                die("Error: No survey found for id '$survey_id'.");
+            }
+            $survey = $surveys[$survey_id];
+
+            // load votes
+            $votes = array();
+            if(isset($_POST["vote"])) 
+            {
+                // securing payload
+                foreach($_POST["vote"] as $key => $players) 
+                {
+                    $votes[$key] = htmlspecialchars($players);
+                }
+            } else {
+                error_log("Warning: Blank vote received.");
+                break;
+            }
+
+            $survey->digest_votes($votes);
+
+            break;
         default:
             die("Error: Not yet implemented!");
     }
@@ -229,6 +266,18 @@ function page_init(string $requested_page): WebPage {
                 return new AdminHomePage();
             }
             return new UnauthenticatedPage();
+        case Page::ShowSurveys:
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"])
+            {
+                return new ShowSurveysPage();
+            }
+            return new UnauthenticatedPage();
+        case Page::ShowSurvey:
+            if(isset($_GET["survey_id"])) 
+            {
+                return new ShowSurveyPage(htmlspecialchars($_GET["survey_id"]));
+            }
+            return new LoginPage();
         case Page::StartNewSurvey:
             if(isset($_SESSION["admin"]) && $_SESSION["admin"])
             {

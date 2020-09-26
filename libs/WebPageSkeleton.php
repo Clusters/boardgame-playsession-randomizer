@@ -12,14 +12,16 @@ abstract class WebPageSkeleton
             $redirection = "<meta http-equiv=\"Refresh\" content=\"3; url='$redirect_target'\">";
         }
 
-        return "
-        <header>
+        return <<<HTML
+        <head>
             <title>
                 $title
             </title>
+            <link rel="stylesheet" href="./resources/css/site.css">
             $redirection
-        </header>
-        ";
+            <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+        </head>
+        HTML;
     }
 
     protected function generate_body_encapsulation(string $content): string
