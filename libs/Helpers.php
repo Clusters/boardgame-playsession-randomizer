@@ -1,5 +1,30 @@
 <?php
 /**
+ * Fetches all surveys and returns an array of Survey objects.
+ * 
+ * @return:
+ * array of Survey with their survey_id as keys
+ */
+function fetch_all_surveys(): array
+{
+    if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
+    {
+        error_log("Warning: Tried to fetch surveys while surveys.json not yet existing.");
+        return array();
+    }
+
+    $surveys_json = json_decode(file_get_contents("./resources/surveys.json"), true)["surveys"];
+
+    $surveys = array();
+    foreach($surveys_json as $survey_id => $survey_json)
+    {
+        $surveys[$survey_id] = new Survey($survey_id, $survey_json);
+    }
+
+    return $surveys;
+}
+
+/**
  * Fetches all boardgames and returns an array of Boardgame objects.
  * 
  * @return:

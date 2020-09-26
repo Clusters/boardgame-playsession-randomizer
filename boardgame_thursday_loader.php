@@ -16,6 +16,7 @@ require_once("./inc/LoginValidationPage.php");
 require_once("./inc/NewEntryPage.php");
 require_once("./inc/AdminHomePage.php");
 require_once("./inc/StartSurveyPage.php");
+require_once("./inc/ShowSurveysPage.php");
 
 function digest_request(string $received_payload) {
 
@@ -228,6 +229,12 @@ function page_init(string $requested_page): WebPage {
             if(isset($_SESSION["admin"]) && $_SESSION["admin"])
             {
                 return new AdminHomePage();
+            }
+            return new UnauthenticatedPage();
+        case Page::ShowSurveys:
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"])
+            {
+                return new ShowSurveysPage();
             }
             return new UnauthenticatedPage();
         case Page::StartNewSurvey:

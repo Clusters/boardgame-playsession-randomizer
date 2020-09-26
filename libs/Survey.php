@@ -2,17 +2,62 @@
 class Survey
 {
     private $version = 1; // version to trace changes in properties etc.
-    private $active = false;
-    private $survey_id = 0;
+    private $last_update = 0;
+    public $active = null;
+    public $survey_id = 0;
+    private $boardgames_and_votes = array();
+    private $started_on = null;
+    private $runs_until = null;
 
-    function __construct(int $survey_id = 0)
+    function __construct(int $survey_id = 0, array $survey_json = array())
     {
         $this->survey_id = $survey_id;
 
         if($survey_id != 0)
         {
-            $this->check_if_still_active();
+            if($survey_json == array())
+            {
+                $this->get_survey_information();
+            } else {
+                $this->digest_json($survey_json);
+            }
+            $this->is_still_active();
         }
+    }
+
+    /**
+     * Fetches informations from surveys.json regarding to the objects $this->survey_id
+     * @return:
+     * True if update was successful, or False if $this->survey_id was not found or 0
+     */
+    public function get_survey_information(): bool
+    {
+        if($this->survey_id == 0)
+        {
+            error_log("Warning: Tried to update on not yet set survey_id = 0.");
+            return false;
+        }
+
+        if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
+        {
+            die("Error: Tried to fetch survey information, when there is no surveys.json file yet.");
+        }
+
+        $surveys_array = json_decode(file_get_contents("./resources/surveys.json"), true)["surveys"];
+
+        if(!array_key_exists($this->survey_id, $surveys_array))
+        {
+            error_log("Warning: Invalid survey_id $this->survey_id given.");
+            return false;
+        }
+
+        $survey = $surveys_array[$this->survey_id];
+
+        $this->digest_json($survey);
+
+        $this->last_update = time();
+
+        return true;
     }
 
     /**
@@ -36,6 +81,7 @@ class Survey
         $survey_json = $this->generate_survey_json($games, $until);
 
         $this->survey_id = $this->add_new_survey_to_json_file($survey_json);
+        $this->active = true;
 
         echo <<<SUCCESS
             <p class="success">Survey $this->survey_id started</p>
@@ -73,7 +119,8 @@ class Survey
                 $candidate = $boardgames[$random_bg_key];
                 if(!($candidate instanceof Boardgame))
                 {
-                    die("Error: Wrong data type received from item of fetch_all_boardgames() return.");
+                    $type = get_class($candidate);
+                    die("Error: Wrong data type $type received from item of fetch_all_boardgames() return.");
                 }
 
                 unset($boardgames[$random_bg_key]); // delete used game from pool of games
@@ -95,9 +142,11 @@ class Survey
             $game_items[$game->bgg_id] = 0; // the int represents the amount of votes the game got (0 on generation)
         }
 
-        return array(
-            "games" => $game_items, "started" => time(), "run_until" => $until
+        $survey_json = array(
+            "games" => $game_items, "started" => time(), "run_until" => $until, "version" => $this->version
         );
+        $this->digest_json($survey_json);
+        return $survey_json;
     }
 
     private function add_new_survey_to_json_file(array $survey_json): int
@@ -129,19 +178,69 @@ class Survey
     }
 
     /**
+     * Receives a raw json array object and reads&writes information from it into the object.
+     * 
+     * Structure of version 1 is:
+     * {
+     *      "games": {
+     *          "<bgg_id>": <number_of_votes>,
+     *          "151347": 0,
+     *          "180263": 0,
+     *          "181687": 0
+     *      },
+     *      "started": 1601062011,
+     *      "run_until": 1601493240,
+     *      "version": 1
+     *  }
+     */
+    private function digest_json(array $survey_json)
+    {
+        // not possible due to array type restrictions: array keys must be primitive
+        /* $boardgames = fetch_all_boardgames();
+        $games_and_votes = array();
+        foreach($survey_json["games"] as $bgg_id => $amount_of_votes)
+        {
+            $games_and_votes[$boardgames[$bgg_id]] = $amount_of_votes;
+        }
+        $this->boardgames_and_votes = $games_and_votes; */
+        
+        $this->boardgames_and_votes = $survey_json["games"];
+
+        $this->started_on = $survey_json["started"];
+        $this->runs_until = $survey_json["run_until"];
+        $this->version = $survey_json["version"];
+        $this->last_update = time();
+    }
+
+    /**
      * Checks if the survey is still active or needs to be updated.
      * Triggers the survey update if necessary.
      */
-    private function check_if_still_active()
+    private function is_still_active(): bool
     {
         if($this->survey_id == 0)
         {
-            die("Error: Illegal access to method check_if_still_active().");
+            die("Error: Illegal access to method is_still_active().");
         }
 
-        //todo
+        if(is_null($this->last_update) || time()-$this->last_update > 10 || is_null($this->runs_until))
+        {
+            $this->get_survey_information();
+        }
+
+        if(time() > $this->runs_until)
+        {
+            $this->active = false;
+            return false;
+        }
+        $this->active = true;
+        return true;
     }
 
+    /**
+     * @return:
+     * Returns the id of the last started survey. Including deleted surveys.
+     */
     private function get_last_survey_id(): int
     {
         if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
