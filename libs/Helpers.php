@@ -7,13 +7,13 @@
  */
 function fetch_all_surveys(): array
 {
-    if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
+    if(!is_dir("./data") || !file_exists("./data/surveys.json"))
     {
         error_log("Warning: Tried to fetch surveys while surveys.json not yet existing.");
         return array();
     }
 
-    $surveys_json = json_decode(file_get_contents("./resources/surveys.json"), true)["surveys"];
+    $surveys_json = json_decode(file_get_contents("./data/surveys.json"), true)["surveys"];
 
     $surveys = array();
     foreach($surveys_json as $survey_id => $survey_json)
@@ -32,13 +32,13 @@ function fetch_all_surveys(): array
  */
 function fetch_all_boardgames(): array
 {
-    if(!is_dir("./resources") || !file_exists("./resources/boardgames.json"))
+    if(!is_dir("./data") || !file_exists("./data/boardgames.json"))
     {
         error_log("Warning: Tried to fetch board games while boardgames.json not yet existing.");
         return array();
     }
 
-    $boardgames_array = json_decode(file_get_contents("./resources/boardgames.json"), true);
+    $boardgames_array = json_decode(file_get_contents("./data/boardgames.json"), true);
 
     $boardgames = array();
     foreach($boardgames_array as $boardgame)

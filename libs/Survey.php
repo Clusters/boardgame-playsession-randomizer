@@ -38,12 +38,12 @@ class Survey
             return false;
         }
 
-        if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
+        if(!is_dir("./data") || !file_exists("./data/surveys.json"))
         {
             die("Error: Tried to fetch survey information, when there is no surveys.json file yet.");
         }
 
-        $surveys_array = json_decode(file_get_contents("./resources/surveys.json"), true)["surveys"];
+        $surveys_array = json_decode(file_get_contents("./data/surveys.json"), true)["surveys"];
 
         if(!array_key_exists($this->survey_id, $surveys_array))
         {
@@ -152,11 +152,11 @@ class Survey
     private function add_new_survey_to_json_file(array $survey_json): int
     {
         $new_survey_id = $this->get_last_survey_id()+1;
-        if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
+        if(!is_dir("./data") || !file_exists("./data/surveys.json"))
         {
-            if(!is_dir("./resources"))
+            if(!is_dir("./data"))
             {
-                mkdir("./resources", 0755);
+                mkdir("./data", 0755);
             }
 
             $surveys_json = array(
@@ -164,12 +164,12 @@ class Survey
                 "surveys" => array($new_survey_id => $survey_json)
             );
         } else {
-            $surveys_json = json_decode(file_get_contents("./resources/surveys.json"), true);
+            $surveys_json = json_decode(file_get_contents("./data/surveys.json"), true);
             $surveys_json["last_survey_id"] = $new_survey_id;
             $surveys_json["surveys"][$new_survey_id] = $survey_json;
         }
 
-        $result = file_put_contents("./resources/surveys.json", json_encode($surveys_json));
+        $result = file_put_contents("./data/surveys.json", json_encode($surveys_json));
         if(!$result) {
             die("Error: Survey could not be started!");
         }
@@ -243,12 +243,12 @@ class Survey
      */
     private function get_last_survey_id(): int
     {
-        if(!is_dir("./resources") || !file_exists("./resources/surveys.json"))
+        if(!is_dir("./data") || !file_exists("./data/surveys.json"))
         {
             return 0;
         }
 
-        $surveys_json = json_decode(file_get_contents("./resources/surveys.json"), true);
+        $surveys_json = json_decode(file_get_contents("./data/surveys.json"), true);
 
         return $surveys_json["last_survey_id"];
     }
