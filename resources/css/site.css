@@ -1,5 +1,6 @@
 body, html {
     height: 100%;
+    margin: 0;
 }
 
 * {
@@ -75,4 +76,73 @@ a.bgg-link {
     color: white;
     font-weight: 500;
     text-decoration-line: none;
+}
+
+div#survey-results-content > ul {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+progress[value] {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+     appearance: none;
+  
+    width: 250px;
+    height: 20px;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+progress[value]::-webkit-progress-value {
+    background-image:
+         -webkit-linear-gradient(-45deg, 
+                                 transparent 33%, rgba(0, 0, 0, .1) 33%, 
+                                 rgba(0,0, 0, .1) 66%, transparent 66%),
+         -webkit-linear-gradient(top, 
+                                 rgba(255, 255, 255, .25), 
+                                 rgba(0, 0, 0, .25)),
+         -webkit-linear-gradient(left, #09c, rgb(61, 61, 61));
+  
+      border-radius: 2px; 
+      background-size: 35px 20px, 100% 100%, 100% 100%;
+}
+
+progress[value].leader::-webkit-progress-value {
+    background-image:
+         -webkit-linear-gradient(-45deg, 
+                                 transparent 33%, rgba(0, 0, 0, .1) 33%, 
+                                 rgba(0,0, 0, .1) 66%, transparent 66%),
+         -webkit-linear-gradient(top, 
+                                 rgba(255, 255, 255, .25), 
+                                 rgba(0, 0, 0, .25)),
+         -webkit-linear-gradient(left, rgb(24, 197, 8), rgb(61, 61, 61));
+  
+      border-radius: 2px; 
+      background-size: 35px 20px, 100% 100%, 100% 100%;
+}
+
+progress.leader {
+    background-color: rgb(70, 218, 70);
+}
+
+div.survey-result-item {
+    display: inline-flex;
+}
+
+div#survey-results-content > ul > li > div > label {
+    margin: 12px;
+    font-size: larger;
+    font-family: monospace;
+}
+
+div#survey-results-content > ul > li > div > label > a {
+    text-decoration: none;
+    color: black;
 }

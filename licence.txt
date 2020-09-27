@@ -1,3 +1,13 @@
 resources/img/empty_hourglass.png
 "Black Hourglass PNG" by pngall.com is licensed under CC BY 4.0 -> http://www.pngall.com/hourglass-png/download/46393
 https://creativecommons.org/licenses/by-nc/4.0/
+
+The image reosources found on all board game detail pages, e.g. board game imagery, are subject to the Terms of Service by Boardgamegeek.com and their respective owners.
+https://boardgamegeek.com/wiki/page/XML_API_Terms_of_Use
+A hyperlink to the source is provided on every board game detail page.
+
+The description texts found on all board game detail pages are subject to the Terms of Service by either Boardgamegeek or (if specified in their source) by The Wikimedia Foundation, Inc, which underlies CC BY-NC-SA 3.0.
+A hyperlink to the source of Boardgamegeek can be found on every board game detail page.
+https://boardgamegeek.com/wiki/page/XML_API_Terms_of_Use
+https://foundation.wikimedia.org/wiki/Terms_of_Use/en
+https://creativecommons.org/licenses/by-nc-sa/3.0/

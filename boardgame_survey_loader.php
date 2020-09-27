@@ -19,6 +19,7 @@ require_once("./inc/StartSurveyPage.php");
 require_once("./inc/ShowSurveysPage.php");
 require_once("./inc/ShowSurveyPage.php");
 require_once("./inc/ShowBoardgamePage.php");
+require_once("./inc/ShowSurveyResultsPage.php");
 
 function digest_request(string $received_payload) {
 
@@ -282,6 +283,12 @@ function page_init(string $requested_page): WebPage {
         case Page::ShowBoardgameDetails:
             if(isset($_GET["boardgame_id"])){
                 return new ShowBoardgamePage(htmlspecialchars($_GET["boardgame_id"]));
+            }
+            return new LoginPage();
+        case Page::ShowSurveyResults:
+            if(isset($_GET["survey_id"])) 
+            {
+                return new ShowSurveyResultsPage(htmlspecialchars($_GET["survey_id"]));
             }
             return new LoginPage();
         case Page::StartNewSurvey:
