@@ -9,3 +9,5 @@ No database needed.
 
 ##### Update
 Delete all files except those in your /data folder (and the config.json if you'd like to retain your given password). Then copy the new files over.
+
+Test
