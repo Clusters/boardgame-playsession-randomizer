@@ -27,9 +27,15 @@ class ShowSurveyPage extends WebPageSkeleton implements WebPage
         $vote_items = "";
         foreach($boardgames as $bgg_id => $boardgame)
         {
+            $multisession = "";
+            if($boardgame->multisession) 
+            {
+                $multisession .= "*";
+            }
+
             $vote_items .= <<<HYPERLINK
                 <input class="vote_checkbox vote_item" type="checkbox" name="vote[]" value="$bgg_id">
-                <label><a href="./index.php?page=$boardgames_details_page&boardgame_id=$bgg_id">$boardgame->title</a></label><br>
+                <label><a href="./index.php?page=$boardgames_details_page&boardgame_id=$bgg_id">$boardgame->title</a>$multisession</label><br>
 HYPERLINK;
         }
         
@@ -48,6 +54,7 @@ HYPERLINK;
                 <br>
                 <input type="submit" value="Submit">
             </form>
+            <span id="multisession-footnote">* Multisession board game</span>
             <script type="text/javascript">//<![CDATA[
                 var limit = $vote_amount;
                 $('input.vote_checkbox').on('change', function(evt) {
