@@ -50,7 +50,42 @@ abstract class Lists
     );
 
     const AllTags = array(
-        "card game", "RPG"
+        "anime",
+        "austria",
+        "bluffing",
+        "campaign",
+        "cardgame",
+        "CCG",
+        "co-op",
+        "deck-building",
+        "deduction",
+        "detective",
+        "dice",
+        "dungeon-crawl",
+        "economic",
+        "educational",
+        "english",
+        "family",
+        "fantasy",
+        "german",
+        "historic",
+        "japanese",
+        "kickstarter",
+        "LCG",
+        "micro",
+        "party",
+        "prehistoric",
+        "present",
+        "PvE",
+        "PvP",
+        "quiz",
+        "randomizer",
+        "RPG",
+        "sci-fi",
+        "storytelling",
+        "strategy",
+        "teams",
+        "worker-placement "
     );
 }
 ?>
