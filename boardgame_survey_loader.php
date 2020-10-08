@@ -213,20 +213,20 @@ SUCCESS;
             $survey = $surveys[$survey_id];
 
             // load votes
-            $votes = array();
+            $voting = array();
             if(isset($_POST["vote"])) 
             {
                 // securing payload
                 foreach($_POST["vote"] as $key => $players) 
                 {
-                    $votes[$key] = htmlspecialchars($players);
+                    $voting[$key] = htmlspecialchars($players);
                 }
             } else {
                 error_log("Warning: Blank vote received.");
                 break;
             }
 
-            $survey->digest_votes($votes);
+            $survey->digest_voting($voting);
 
             break;
         default:

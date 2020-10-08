@@ -61,11 +61,17 @@ class ShowSurveyResultsPage extends WebPageSkeleton implements WebPage
             }
 
             $boardgame_title = $boardgames[$bgg_id]->title;
+            $multisession = "";
+            if($boardgames[$bgg_id]->multisession)
+            {
+                $multisession="*";
+            }
+
             $survey_items .= <<<SURVEYITEM
             <li>
                 <div class="survey-result-item">
                     <progress id="$bgg_id" value="$percentage" max="100"$leader> $percentage% </progress>
-                    <label for="$bgg_id"><a href="./index.php?page=$page&boardgame_id=$bgg_id">$boardgame_title</a></label>
+                    <label for="$bgg_id"><a href="./index.php?page=$page&boardgame_id=$bgg_id" target="_blank">$boardgame_title</a>$multisession</label>
                 </div>
             </li>
 SURVEYITEM;
@@ -79,6 +85,7 @@ SURVEYITEM;
                     $survey_items
                 </ul>
             </div>
+            <span id="multisession-footnote">* Multisession board game</span>
 HTML;
         echo $this->generate_body_encapsulation($content);
     }

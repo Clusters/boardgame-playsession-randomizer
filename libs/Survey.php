@@ -6,6 +6,7 @@ class Survey
     public $active = null;
     public $survey_id = 0;
     public $boardgames_and_votes = array();
+    private $voting_counter = 0; # represents the number of already performed user votings for this survey
     private $started_on = null;
     private $runs_until = null;
 
@@ -91,12 +92,12 @@ SUCCESS;
     }
 
     /**
-     * Parses, adds and updates the votes of this survey with given votes
+     * Parses, adds and updates the votes of a voting of this survey with given votes
      * 
      * @param votes:
      * Expected is an array containing the bgg_ids of the games were votes should be applied.
      */
-    public function digest_votes(array $votes) 
+    public function digest_voting(array $votes) 
     {
         if($this->boardgames_and_votes == array())
         {
@@ -107,6 +108,8 @@ SUCCESS;
         {
             $this->boardgames_and_votes[$bgg_id]++;
         }
+
+        $this->voting_counter++;
 
         $survey_json = $this->generate_updated_survey_json();
         $this->write_survey_to_json_file($survey_json);
@@ -169,7 +172,7 @@ SUCCESS;
         }
 
         $survey_json = array(
-            "games" => $game_items, "started" => time(), "run_until" => $until, "version" => $this->version
+            "games" => $game_items, "started" => time(), "run_until" => $until, "version" => $this->version, "voting_counter" => $this->voting_counter
         );
         $this->digest_json($survey_json);
         return $survey_json;
@@ -184,7 +187,7 @@ SUCCESS;
 
         return array(
             "games" => $this->boardgames_and_votes, "started" => $this->started_on, "run_until" => $this->runs_until,
-            "version" => $this->version
+            "version" => $this->version, "voting_counter" => $this->voting_counter
         );
     }
 
@@ -211,7 +214,8 @@ SUCCESS;
      *      ),
      *      "started" => 1601062011,
      *      "run_until" => 1601493240,
-     *      "version" => 1
+     *      "version" => 1,
+     *      "voting_counter" => 0
      * )
      * @param new_survey_id:
      * Optional: Only necessary if the last_survey_id should be updated. Will also 
@@ -264,7 +268,8 @@ SUCCESS;
      *      },
      *      "started": 1601062011,
      *      "run_until": 1601493240,
-     *      "version": 1
+     *      "version": 1,
+     *      "voting_counter": 0
      *  }
      */
     private function digest_json(array $survey_json)
@@ -275,6 +280,12 @@ SUCCESS;
         $this->runs_until = $survey_json["run_until"];
         $this->version = $survey_json["version"];
         $this->last_update = time();
+
+        if(key_exists("voting_counter", $survey_json)) {
+            $this->voting_counter = $survey_json["voting_counter"];
+        } else {
+            die("Incompatible survey found! 'voting_counter' missing");
+        }
     }
 
     /**
