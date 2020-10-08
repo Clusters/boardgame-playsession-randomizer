@@ -71,7 +71,7 @@ class ShowSurveyResultsPage extends WebPageSkeleton implements WebPage
             <li>
                 <div class="survey-result-item">
                     <progress id="$bgg_id" value="$percentage" max="100"$leader> $percentage% </progress>
-                    <label for="$bgg_id"><a href="./index.php?page=$page&boardgame_id=$bgg_id">$boardgame_title</a>$multisession</label>
+                    <label for="$bgg_id"><a href="./index.php?page=$page&boardgame_id=$bgg_id" target="_blank">$boardgame_title</a>$multisession</label>
                 </div>
             </li>
 SURVEYITEM;

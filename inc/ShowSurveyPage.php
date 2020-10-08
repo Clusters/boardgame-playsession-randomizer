@@ -35,7 +35,7 @@ class ShowSurveyPage extends WebPageSkeleton implements WebPage
 
             $vote_items .= <<<HYPERLINK
                 <input class="vote_checkbox vote_item" type="checkbox" name="vote[]" value="$bgg_id">
-                <label><a href="./index.php?page=$boardgames_details_page&boardgame_id=$bgg_id">$boardgame->title</a>$multisession</label><br>
+                <label><a href="./index.php?page=$boardgames_details_page&boardgame_id=$bgg_id" target="_blank">$boardgame->title</a>$multisession</label><br>
 HYPERLINK;
         }
         
