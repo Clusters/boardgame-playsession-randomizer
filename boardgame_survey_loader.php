@@ -20,6 +20,7 @@ require_once("./inc/ShowSurveysPage.php");
 require_once("./inc/ShowSurveyPage.php");
 require_once("./inc/ShowBoardgamePage.php");
 require_once("./inc/ShowSurveyResultsPage.php");
+require_once("./inc/ShowBoardgamesPage.php");
 
 function digest_request(string $received_payload) {
 
@@ -295,6 +296,12 @@ function page_init(string $requested_page): WebPage {
             if(isset($_SESSION["admin"]) && $_SESSION["admin"])
             {
                 return new StartSurveyPage();
+            }
+            return new UnauthenticatedPage();
+        case Page::ShowBoardgames:
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"])
+            {
+                return new ShowBoardgamesPage();
             }
             return new UnauthenticatedPage();
         default:
