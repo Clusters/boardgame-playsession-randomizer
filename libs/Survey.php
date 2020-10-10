@@ -6,6 +6,7 @@ class Survey
     public $active = null;
     public $survey_id = 0;
     public $boardgames_and_votes = array();
+    private $voted_visitors = array();
     private $voting_counter = 0; # represents the number of already performed user votings for this survey
     private $started_on = null;
     private $runs_until = null;
@@ -111,12 +112,37 @@ SUCCESS;
 
         $this->voting_counter++;
 
+        if(!key_exists("visitor_id", $_COOKIE))
+        {
+            die("Error: The visitor id could not be found.");
+        }
+        array_push($this->voted_visitors, $_COOKIE["visitor_id"]);
+
         $survey_json = $this->generate_updated_survey_json();
         $this->write_survey_to_json_file($survey_json);
 
         echo <<<SUCCESS
             <p class="success">Vote was registered successfully</p>
 SUCCESS;
+    }
+
+    /**
+     * Checks if a visitor has already voted on this survey
+     * 
+     * @param visitor_id:
+     * Visitor ID which should be compared with the list of voters
+     * 
+     * @return:
+     * True, if the supplied visitor_id was found inside the list of voters of this survey.
+     * Otherwise False.
+     */
+    public function has_voted(string $visitor_id): bool
+    {
+        if(in_array($visitor_id, $this->voted_visitors))
+        {
+            return true;
+        }
+        return false;
     }
 
     private function fetch_random_games(int $amount): array
@@ -172,7 +198,8 @@ SUCCESS;
         }
 
         $survey_json = array(
-            "games" => $game_items, "started" => time(), "run_until" => $until, "version" => $this->version, "voting_counter" => $this->voting_counter
+            "games" => $game_items, "started" => time(), "run_until" => $until, "version" => $this->version, "voting_counter" => $this->voting_counter,
+            "voters" => $this->voted_visitors
         );
         $this->digest_json($survey_json);
         return $survey_json;
@@ -187,7 +214,7 @@ SUCCESS;
 
         return array(
             "games" => $this->boardgames_and_votes, "started" => $this->started_on, "run_until" => $this->runs_until,
-            "version" => $this->version, "voting_counter" => $this->voting_counter
+            "version" => $this->version, "voting_counter" => $this->voting_counter, "voters" => $this->voted_visitors
         );
     }
 
@@ -215,7 +242,11 @@ SUCCESS;
      *      "started" => 1601062011,
      *      "run_until" => 1601493240,
      *      "version" => 1,
-     *      "voting_counter" => 0
+     *      "voting_counter" => 0,
+     *      "voters" => array(
+     *          "arandomvisitorid" => 1601062011, 
+     *          "another" => 1601493240
+     *      )
      * )
      * @param new_survey_id:
      * Optional: Only necessary if the last_survey_id should be updated. Will also 
@@ -269,7 +300,11 @@ SUCCESS;
      *      "started": 1601062011,
      *      "run_until": 1601493240,
      *      "version": 1,
-     *      "voting_counter": 0
+     *      "voting_counter": 0,
+     *      "voters": {
+     *          "aRandomVisitorID": 1601062011,
+     *          "another" => 1601493240
+     *      }
      *  }
      */
     private function digest_json(array $survey_json)
@@ -281,10 +316,17 @@ SUCCESS;
         $this->version = $survey_json["version"];
         $this->last_update = time();
 
-        if(key_exists("voting_counter", $survey_json)) {
+        if(key_exists("voting_counter", $survey_json)) 
+        {
             $this->voting_counter = $survey_json["voting_counter"];
         } else {
-            die("Incompatible survey found! 'voting_counter' missing");
+            die("Incompatible survey with found! 'voting_counter' missing");
+        }
+        if(key_exists("voters", $survey_json))
+        {
+            $this->voted_visitors = $survey_json["voters"];
+        } else {
+            die("Incompatible survey found! 'voters' missing");
         }
     }
 

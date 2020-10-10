@@ -1,5 +1,4 @@
 .vscode/*
 config.json
-data/boardgames.json
-data/surveys.json
+data/*
 template.html

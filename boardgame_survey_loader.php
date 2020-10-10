@@ -7,6 +7,8 @@ if(!$session_started) {
 
 require_once("./libs/Collection.php");
 require_once("./libs/Helpers.php");
+require_once("./libs/UniqueVotes.php");
+visitor_check();
 require_once("./libs/Boardgame.php");
 require_once("./libs/Survey.php");
 require_once("./inc/SetAdminPage.php");

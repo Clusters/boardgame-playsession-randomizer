@@ -52,4 +52,27 @@ function fetch_all_boardgames(): array
 
     return $boardgames;
 }
+
+/**
+ * Fetches all known visitor ids and returns an array containing them as keys.
+ * 
+ * @return:
+ * array of timestamps with their visitor_id as keys
+ */
+function fetch_known_visitor_ids(): array
+{
+    if(!is_dir("./data") || !file_exists("./data/unique_visitors.json"))
+    {
+        error_log("Warning: Tried to fetch visitor IDs while unique_visitors.json not yet existing.");
+        return array();
+    }
+
+    $known_visitor_ids = json_decode(file_get_contents("./data/unique_visitors.json"), true);
+
+    if(is_null($known_visitor_ids))
+    {
+        return array();
+    }
+    return $known_visitor_ids;
+}
 ?>

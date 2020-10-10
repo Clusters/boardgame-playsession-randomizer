@@ -25,7 +25,12 @@ class ShowSurveyPage extends WebPageSkeleton implements WebPage
         if($this->survey_is_expired) 
         {
             $action = Page::ShowSurveyResults;
-            echo $this->generate_header("Login Validation", "index.php?page=$action&survey_id=$this->survey_id");
+            echo $this->generate_header("Survey expired", "index.php?page=$action&survey_id=$this->survey_id");
+        } 
+        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
+        {
+            $action = Page::ShowSurveyResults;
+            echo $this->generate_header("Already voted", "index.php?page=$action&survey_id=$this->survey_id");
         }
     }
 
@@ -36,6 +41,17 @@ class ShowSurveyPage extends WebPageSkeleton implements WebPage
             $action = Page::ShowSurveyResults;
             $content = "
             <p class=\"error\">The requested survey is already expired.</p><br>
+            <p>If automated forwarding does not work -> <a href=\"index.php?page=$action&survey_id=$this->survey_id\">Click here</a></p>
+            ";
+        
+            echo $this->generate_body_encapsulation($content);
+            return;
+        }
+        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
+        {
+            $action = Page::ShowSurveyResults;
+            $content = "
+            <p class=\"error\">You have already voted on this survey.</p><br>
             <p>If automated forwarding does not work -> <a href=\"index.php?page=$action&survey_id=$this->survey_id\">Click here</a></p>
             ";
         
