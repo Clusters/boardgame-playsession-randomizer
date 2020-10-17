@@ -30,6 +30,16 @@ OPTION;
         }
         $tag_options_count = sizeof(Lists::AllTags);
 
+        $language_options = "";
+        for($i=0;$i<sizeof(Lists::AllLanguages);$i++)
+        {
+            $language = Lists::AllLanguages[$i];
+            $language_options .= <<<OPTION
+            <option value="$language">$language</option>
+OPTION;
+        }
+        $language_options_count = sizeof(Lists::AllLanguages);
+
         $payload = Payload::NewEntry;
         $action = Page::NewEntry;
         $content = <<<HTML
@@ -50,6 +60,11 @@ OPTION;
                 <label for="tags">Tags</label><br>
                 <select name="tags[]" size="$tag_options_count" multiple>
                     $tag_options
+                </select><br>
+                <br>
+                <label for="languages">Languages</label><br>
+                <select name="languages[]" size="$language_options_count" multiple>
+                    $language_options
                 </select><br>
                 <br>
                 <label for="preview_url">Enter an URL to a short preview (e.g. Youtube Video, Sneak Peak blog entry, etc.):</label><br>

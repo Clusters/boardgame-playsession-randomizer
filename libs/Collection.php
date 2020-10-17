@@ -87,5 +87,20 @@ abstract class Lists
         "teams",
         "worker-placement "
     );
+
+    const AllLanguages = array(
+        "german",
+        "english",
+        "spanish",
+        "french",
+        "italian",
+        "portuguese",
+        "chinese",
+        "japanese",
+        "korean",
+        "russian",
+        "dutch",
+        "language_independent"
+    );
 }
 ?>

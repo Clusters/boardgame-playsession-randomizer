@@ -44,7 +44,7 @@ function fetch_all_boardgames(): array
     foreach($boardgames_array as $boardgame)
     {
         $boardgames[$boardgame["bgg_id"]] = new Boardgame(
-            $boardgame["title"], $boardgame["player_count"], $boardgame["multisession"], $boardgame["tags"],
+            $boardgame["title"], $boardgame["player_count"], $boardgame["multisession"], $boardgame["tags"], $boardgame["languages"],
             $boardgame["preview_url"], $boardgame["tutorial_url"], $boardgame["bgg_id"], $boardgame["created"],
             $boardgame["last_survey_id"], $boardgame["version"]
         );
