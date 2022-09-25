@@ -5,22 +5,63 @@ require_once("./libs/WebPage.php");
 class ShowSurveyPage extends WebPageSkeleton implements WebPage
 {
     private $survey_id = 0;
+    private $survey_is_expired = false;
+    private $survey = null;
 
     function __construct(int $survey_id)
     {
         $this->survey_id = $survey_id;
+        $this->survey = $this->retrieve_survey();
+        if(!$this->survey->active)
+        {
+            $this->survey_is_expired = true;
+        }
     }
 
     public function print_page_header()
     {
         echo $this->generate_header("Vote now");
+
+        if($this->survey_is_expired) 
+        {
+            $action = Page::ShowSurveyResults;
+            echo $this->generate_header("Survey expired", "index.php?page=$action&survey_id=$this->survey_id");
+        } 
+        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
+        {
+            $action = Page::ShowSurveyResults;
+            echo $this->generate_header("Already voted", "index.php?page=$action&survey_id=$this->survey_id");
+        }
     }
 
     public function print_page_content()
     {
+        if($this->survey_is_expired)
+        {
+            $action = Page::ShowSurveyResults;
+            $content = "
+            <p class=\"error\">The requested survey is already expired.</p><br>
+            <p>If automated forwarding does not work -> <a href=\"index.php?page=$action&survey_id=$this->survey_id\">Click here</a></p>
+            ";
+        
+            echo $this->generate_body_encapsulation($content);
+            return;
+        }
+        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
+        {
+            $action = Page::ShowSurveyResults;
+            $content = "
+            <p class=\"error\">You have already voted on this survey.</p><br>
+            <p>If automated forwarding does not work -> <a href=\"index.php?page=$action&survey_id=$this->survey_id\">Click here</a></p>
+            ";
+        
+            echo $this->generate_body_encapsulation($content);
+            return;
+        }
+
         $vote_amount = 2; // currently fixed, in future configurable per survey
 
-        $survey = $this->retrieve_survey();
+        $survey = $this->survey;
         $boardgames = $this->retrieve_games_from_survey($survey);
 
         $boardgames_details_page = Page::ShowBoardgameDetails;

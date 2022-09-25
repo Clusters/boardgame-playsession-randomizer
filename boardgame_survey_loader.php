@@ -7,6 +7,8 @@ if(!$session_started) {
 
 require_once("./libs/Collection.php");
 require_once("./libs/Helpers.php");
+require_once("./libs/UniqueVotes.php");
+visitor_check();
 require_once("./libs/Boardgame.php");
 require_once("./libs/Survey.php");
 require_once("./inc/SetAdminPage.php");
@@ -20,6 +22,7 @@ require_once("./inc/ShowSurveysPage.php");
 require_once("./inc/ShowSurveyPage.php");
 require_once("./inc/ShowBoardgamePage.php");
 require_once("./inc/ShowSurveyResultsPage.php");
+require_once("./inc/ShowBoardgamesPage.php");
 
 function digest_request(string $received_payload) {
 
@@ -118,6 +121,16 @@ SUCCESS;
                 }
             }
 
+            $languages = array();
+            if(isset($_POST["languages"])) 
+            {
+                // securing payload
+                foreach($_POST["languages"] as $key => $language) 
+                {
+                    $languages[$key] = htmlspecialchars($language);
+                }
+            }
+
             $preview_url = "";
             if(isset($_POST["preview_url"]))
             {
@@ -145,7 +158,7 @@ SUCCESS;
             $bgg_id = $matches["id"];
 
             // save board game
-            $boardgame = new Boardgame($title, $player_count, $multisession, $tags, $preview_url, $tutorial_url, $bgg_id);
+            $boardgame = new Boardgame($title, $player_count, $multisession, $tags, $languages, $preview_url, $tutorial_url, $bgg_id);
             $boardgame->write_boardgame_to_json();
 
             break;
@@ -158,6 +171,11 @@ SUCCESS;
             }
 
             // read data
+            if(!isset($_POST["player_count"]))
+            {
+                die("Error: Missing player count!");
+            }
+            $player_count = (int)htmlspecialchars($_POST["player_count"]);
             if(!isset($_POST["games_amount"]))
             {
                 die("Error: Missing games amount!");
@@ -191,7 +209,7 @@ SUCCESS;
             }
 
             $survey = new Survey();
-            $survey->start_survey($games_amount, $until);
+            $survey->start_survey($player_count, $games_amount, $until);
 
             break;
         case Payload::NewVote:
@@ -297,7 +315,17 @@ function page_init(string $requested_page): WebPage {
                 return new StartSurveyPage();
             }
             return new UnauthenticatedPage();
+        case Page::ShowBoardgames:
+            if(isset($_SESSION["admin"]) && $_SESSION["admin"])
+            {
+                return new ShowBoardgamesPage();
+            }
+            return new UnauthenticatedPage();
         default:
+            if(key_exists($requested_page, Lists::AllPages))
+            {
+                die("Error: $requested_page not yet implemented!");
+            }
             die("Error: $requested_page not implemented!");
     }
 }

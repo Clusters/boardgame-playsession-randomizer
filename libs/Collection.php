@@ -20,6 +20,9 @@ abstract class Page
     const LoginVerification = "LoginVerification";
     const NotAuthenticated = "NotAuthenticated";
     const AdminHome = "AdminHome";
+    const EditBoardgame = "EditBoardgame";
+    const DeleteBoardgame = "DeleteBoardgame";
+    const ToggleBoardgameActivation = "ToggleBoardgameActivation";
 }
 
 abstract class Payload 
@@ -41,7 +44,8 @@ abstract class Lists
         Page::ShowSurvey => Page::ShowSurvey, Page::FinishSurvey => Page::FinishSurvey, Page::ShowSurveyResults => Page::ShowSurveyResults, 
         Page::ShowBoardgameDetails => Page::ShowBoardgameDetails, Page::Login => Page::Login, Page::NotAuthenticated => Page::NotAuthenticated,
         Page::LoginVerification => Page::LoginVerification, Page::Logout => Page::Logout, Page::AdminHome => Page::AdminHome,
-        Page::ShowBoardgames => Page::ShowBoardgames, Page::ShowSurveys => Page::ShowSurveys
+        Page::ShowBoardgames => Page::ShowBoardgames, Page::ShowSurveys => Page::ShowSurveys, Page::EditBoardgame => Page::EditBoardgame, Page::DeleteBoardgame => Page::DeleteBoardgame,
+        Page::ToggleBoardgameActivation => Page::ToggleBoardgameActivation
     );
 
     const AllPayloadTypes = array(
@@ -86,6 +90,21 @@ abstract class Lists
         "strategy",
         "teams",
         "worker-placement "
+    );
+
+    const AllLanguages = array(
+        "german",
+        "english",
+        "spanish",
+        "french",
+        "italian",
+        "portuguese",
+        "chinese",
+        "japanese",
+        "korean",
+        "russian",
+        "dutch",
+        "language_independent"
     );
 }
 ?>

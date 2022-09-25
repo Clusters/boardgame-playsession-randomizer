@@ -7,7 +7,7 @@ body, html {
     box-sizing: border-box;
 }
 
-p.survey_item>* {
+p.survey_item>*, p.boardgame_item>* {
     vertical-align: middle;
 }
 
