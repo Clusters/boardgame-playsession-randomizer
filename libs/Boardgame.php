@@ -4,6 +4,7 @@ class Boardgame {
     public array$player_count = array();
     public bool $multisession = false;
     public array $tags = array();
+    public array $languages = array();
     public string $preview_url = "";
     public string $tutorial_url = "";
     public int $bgg_id = 0;
@@ -13,13 +14,14 @@ class Boardgame {
     private int $last_survey_id = 0;
 
     function __construct(
-            string $title, array $player_count, bool $multisession, array $tags, string $preview_url, string $tutorial_url, 
+            string $title, array $player_count, bool $multisession, array $tags, array $languages, string $preview_url, string $tutorial_url, 
             int $bgg_id, int $created = null, int $last_survey_id = 0, int $version = null
         ) {
         $this->title = $title;
         $this->player_count = $player_count;
         $this->multisession = $multisession;
         $this->tags = $tags;
+        $this->languages = $languages;
         $this->preview_url = $preview_url;
         $this->tutorial_url = $tutorial_url;
         $this->bgg_id = $bgg_id;
@@ -38,7 +40,7 @@ class Boardgame {
     public function write_boardgame_to_json()
     {
         $boardgame_array = array(
-            "title" => $this->title, "player_count" => $this->player_count, "multisession" => $this->multisession, "tags" => $this->tags, 
+            "title" => $this->title, "player_count" => $this->player_count, "multisession" => $this->multisession, "tags" => $this->tags, "languages" => $this->languages,
             "preview_url" => $this->preview_url, "tutorial_url" => $this->tutorial_url, "bgg_id" => $this->bgg_id, "created" => $this->created,
             "last_survey_id" => $this->last_survey_id, "version" => $this->version, "active" => $this->active
         );

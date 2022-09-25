@@ -7,6 +7,8 @@ if(!$session_started) {
 
 require_once("./libs/Collection.php");
 require_once("./libs/Helpers.php");
+require_once("./libs/UniqueVotes.php");
+visitor_check();
 require_once("./libs/Boardgame.php");
 require_once("./libs/Survey.php");
 require_once("./inc/SetAdminPage.php");
@@ -119,6 +121,16 @@ SUCCESS;
                 }
             }
 
+            $languages = array();
+            if(isset($_POST["languages"])) 
+            {
+                // securing payload
+                foreach($_POST["languages"] as $key => $language) 
+                {
+                    $languages[$key] = htmlspecialchars($language);
+                }
+            }
+
             $preview_url = "";
             if(isset($_POST["preview_url"]))
             {
@@ -146,7 +158,7 @@ SUCCESS;
             $bgg_id = $matches["id"];
 
             // save board game
-            $boardgame = new Boardgame($title, $player_count, $multisession, $tags, $preview_url, $tutorial_url, $bgg_id);
+            $boardgame = new Boardgame($title, $player_count, $multisession, $tags, $languages, $preview_url, $tutorial_url, $bgg_id);
             $boardgame->write_boardgame_to_json();
 
             break;
