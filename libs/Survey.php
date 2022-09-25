@@ -63,7 +63,9 @@ class Survey
     }
 
     /**
-     * This method starts a new survey with a given amount of games
+     * This method starts a new survey with a given amount of games and player count
+     * @param player_count:
+     * The amount of players which the games featured in the survey should support.
      * @param games_amount:
      * The amount of games which is featured in the survey once started.
      * @param until:
@@ -71,14 +73,23 @@ class Survey
      * @return:
      * Returns the survey id of the newly started survey.
      */
-    public function start_survey(int $games_amount, int $until): int
+    public function start_survey(int $player_count, int $games_amount, int $until): int
     {
         if(time() > $until)
         {
             die("Error: The given time lies in the past.");
         }
 
-        $games = $this->fetch_random_games($games_amount);
+        $games = $this->fetch_player_count_games($player_count);
+
+        $boardgames_amount = sizeof($games);
+        if($boardgames_amount<$games_amount)
+        {
+            die("Error: Tried to start a survey with $games_amount of games, when there have been only $boardgames_amount board games ".
+                "with a player count of $player_count added yet!");
+        }
+
+        $games = $this->fetch_random_games($games_amount, $games);
 
         $survey_json = $this->generate_new_survey_json($games, $until);
 
@@ -145,40 +156,47 @@ SUCCESS;
         return false;
     }
 
-    private function fetch_random_games(int $amount): array
+    private function fetch_player_count_games(int $player_count): array
     {
         // fetch all board games
         $boardgames = fetch_all_boardgames();
-        
-        $boardgames_amount = sizeof($boardgames);
-        if($boardgames_amount<$amount)
-        {
-            die("Error: Tried to start a survey with $amount of games, when there have been only $boardgames_amount board games added yet!");
+
+        $selected_boardgames = array();
+        foreach ($boardgames as $bgg_id => $boardgame) {
+            if(in_array($player_count, $boardgame->player_count))
+            {
+                array_push($selected_boardgames, $boardgame);
+            }
         }
 
+        return $selected_boardgames;
+    }
+
+    private function fetch_random_games(int $amount, array $boardgame_pool): array
+    {
         $chosen_boardgames = array();
-        // choose randomly <amount> of board games
+        // choose random <amount> of board games
         for($i=0;$i<$amount;$i++)
         {
             // try to find a fitting board game
             while(true)
             {
-                if(sizeof($boardgames)<1)
+                if(sizeof($boardgame_pool)<1)
                 {
                     die("Error: With applied filters, not enough board games could be found to start the survey. Try again with different filters.");
                 }
 
-                $random_bg_index_offset = random_int(0,sizeof($boardgames)-1);
-                $random_bg_key = array_keys($boardgames)[$random_bg_index_offset];
+                $random_bg_index_offset = random_int(0,sizeof($boardgame_pool)-1);
+                $random_bg_key = array_keys($boardgame_pool)[$random_bg_index_offset];
 
-                $candidate = $boardgames[$random_bg_key];
+                $candidate = $boardgame_pool[$random_bg_key];
                 if(!($candidate instanceof Boardgame))
                 {
                     $type = get_class($candidate);
-                    die("Error: Wrong data type $type received from item of fetch_all_boardgames() return.");
+                    die("Error: Wrong data type $type received.");
                 }
 
-                unset($boardgames[$random_bg_key]); // delete used game from pool of games
+                unset($boardgame_pool[$random_bg_key]); // delete used game from pool of games
 
                 // analyse candidate (apply filters)
                 // no filters implemented yet

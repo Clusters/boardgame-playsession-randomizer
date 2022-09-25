@@ -171,6 +171,11 @@ SUCCESS;
             }
 
             // read data
+            if(!isset($_POST["player_count"]))
+            {
+                die("Error: Missing player count!");
+            }
+            $player_count = (int)htmlspecialchars($_POST["player_count"]);
             if(!isset($_POST["games_amount"]))
             {
                 die("Error: Missing games amount!");
@@ -204,7 +209,7 @@ SUCCESS;
             }
 
             $survey = new Survey();
-            $survey->start_survey($games_amount, $until);
+            $survey->start_survey($player_count, $games_amount, $until);
 
             break;
         case Payload::NewVote:

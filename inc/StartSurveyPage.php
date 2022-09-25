@@ -13,6 +13,27 @@ class StartSurveyPage extends WebPageSkeleton implements WebPage
     {
         $system_tz_offset = date("P");
 
+        $games_player_count_options = "";
+        $all_player_counts = array();
+        foreach(fetch_all_boardgames() as $bgg_id => $boardgame)
+        {
+            if(!($boardgame instanceof Boardgame))
+            {
+                $type=get_class($boardgame);
+                die("Error: Wrong item type $type received from fetch_all_boardgames()!");
+            }
+
+            foreach($boardgame->player_count as $single_player_count)
+            {
+                if(!in_array($single_player_count, $all_player_counts))
+                {
+                    array_push($all_player_counts, $single_player_count);
+                    $games_player_count_options .= <<<OPTION
+                        <option value="$single_player_count">$single_player_count player(s)</option>
+OPTION;
+                }
+            }
+        }
 
         $games_amount_options = "";
         $max_games_per_survey = 10;
@@ -30,6 +51,12 @@ OPTION;
             <p>
                 <input name="payload" type="hidden" value="$payload">
                 <h1>Start new survey</h1>
+                <label for="player_count">How many players are in this session?<span style="color:red;">*</span>:</label><br>
+                <select name="player_count">
+                    <option value="-" selected disabled>-</option>
+                    $games_player_count_options
+                    </select><br>
+                <br>
                 <label for="games_amount">How many games should be featured?<span style="color:red;">*</span>:</label><br>
                 <select name="games_amount">
                     <option value="-" selected disabled>-</option>
