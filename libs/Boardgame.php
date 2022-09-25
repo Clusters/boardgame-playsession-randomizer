@@ -1,15 +1,16 @@
 <?php
 class Boardgame {
-    public $title = "";
-    public $player_count = array();
-    public $multisession = false;
-    public $tags = array();
-    public $preview_url = "";
-    public $tutorial_url = "";
-    public $bgg_id = 0;
-    private $version = 1; // version to trace changes in properties etc.
-    private $created = 0;
-    private $last_survey_id = 0;
+    public string $title = "";
+    public array$player_count = array();
+    public bool $multisession = false;
+    public array $tags = array();
+    public string $preview_url = "";
+    public string $tutorial_url = "";
+    public int $bgg_id = 0;
+    public bool $active = True;
+    private int $version = 1; // version to trace changes in properties etc.
+    private int $created = 0;
+    private int $last_survey_id = 0;
 
     function __construct(
             string $title, array $player_count, bool $multisession, array $tags, string $preview_url, string $tutorial_url, 
@@ -39,7 +40,7 @@ class Boardgame {
         $boardgame_array = array(
             "title" => $this->title, "player_count" => $this->player_count, "multisession" => $this->multisession, "tags" => $this->tags, 
             "preview_url" => $this->preview_url, "tutorial_url" => $this->tutorial_url, "bgg_id" => $this->bgg_id, "created" => $this->created,
-            "last_survey_id" => $this->last_survey_id, "version" => $this->version
+            "last_survey_id" => $this->last_survey_id, "version" => $this->version, "active" => $this->active
         );
 
         // load/create boardgames.json and insert new boardgame
