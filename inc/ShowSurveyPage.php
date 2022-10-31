@@ -27,7 +27,7 @@ class ShowSurveyPage extends WebPageSkeleton implements WebPage
             $action = Page::ShowSurveyResults;
             echo $this->generate_header("Survey expired", "index.php?page=$action&survey_id=$this->survey_id");
         } 
-        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
+        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && isset($_COOKIE["visitor_id"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
         {
             $action = Page::ShowSurveyResults;
             echo $this->generate_header("Already voted", "index.php?page=$action&survey_id=$this->survey_id");
@@ -47,7 +47,7 @@ class ShowSurveyPage extends WebPageSkeleton implements WebPage
             echo $this->generate_body_encapsulation($content);
             return;
         }
-        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
+        elseif((!isset($_SESSION["admin"]) || !$_SESSION["admin"]) && isset($_COOKIE["visitor_id"]) && $this->survey->has_voted($_COOKIE["visitor_id"]))
         {
             $action = Page::ShowSurveyResults;
             $content = "
